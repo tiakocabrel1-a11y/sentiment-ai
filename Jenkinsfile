@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Remplace par ton identifiant GitHub si besoin, mais tiakocabrel1-a11y semble être le bon
         REGISTRY_USER = 'tiakocabrel1-a11y' 
         IMAGE_NAME    = 'sentiment-ai'
     }
@@ -18,15 +17,14 @@ pipeline {
         stage('Build & Test') {
             steps {
                 echo 'Build et tests de l application...'
-                // Ici, tu peux ajouter tes commandes de test si tu en as (ex: pytest)
             }
         }
 
         stage('Docker Build & Push') {
             steps {
                 echo 'Connexion à la Registry GitHub (GHCR)...'
-                // Utilise le token enregistré dans Jenkins pour se connecter à GitHub Packages
-                withCredentials([usernamePassword(credentialsId: 'tiakocabrel1-a11y', usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
+                // Utilisation du bon ID de credentials 'github-token'
+                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
                     sh "echo \$GH_TOKEN | docker login ghcr.io -u \$GH_USER --password-stdin"
                     
                     echo 'Construction de l image Docker...'
